@@ -24,17 +24,17 @@ int resetMin=00;
 IPAddress staticIP(192,168,0,210);
 IPAddress gateway(192,168,0,1);
 IPAddress subnet(255,255,255,0);
-// get mac from serial print and input here-sometimes used in routers to fix ip address-else delete
+// get mac from serial print and input here-sometimes used in routers to fix ip address in router-else delete
 byte mac[] = {0xEC, 0xFA, 0xBC, 0xA7, 0xAF, 0xEC};
 
-//light led as 2 
+//onboard light led as 2 
 const int led = 2;
 
 //set webserver and time server 
 ESP8266WebServer server(80);
 WiFiUDP ntpUDP;
 
-//set up A0 as input pin and converting calc
+//set up A0 as input pin and converting calc-since A0 can only read up to 3.3 volts in a scaled format of 0 to 1023-need to convert A0 reading to real volts using formula
   // read the input on analog pin 0:
     int sensorValue = analogRead(A0);
   // Convert the analog reading (which goes from 0 - 1023) to a voltage (0 - 3.3V):
@@ -43,7 +43,7 @@ WiFiUDP ntpUDP;
  
 //setup time server locale here
 // By default 'pool.ntp.org' is used with 60 seconds update interval and
-// no offset
+// offset to server by 2 hours (7200 seconds)
 NTPClient timeClient(ntpUDP, "ntp.is.co.za", 7200);
 // You can specify the time server pool and the offset, (in seconds)
 // additionaly you can specify the update interval (in milliseconds).
@@ -54,7 +54,7 @@ NTPClient timeClient(ntpUDP, "ntp.is.co.za", 7200);
 void(* resetFunc)  (void) = 0;   // declare reset function at address 0
 
 
-//webpage reset used to manually reset wemos
+//webpage called reset used to manually reset wemos and flash led
 void resetComb() {
   String messageReset = "Resetting the Wifi...\n";
   messageReset += "Please check with 192.168.0.210/ in a few seconds.";
@@ -83,7 +83,7 @@ void timeCheck() {
     }
 }
 
-//root of webpage triggered or refreshe-handle-text send-time send-volts reading send
+//root of webpage triggered or refreshed-handle-text send- time send- volts reading send
 void handleRoot() {
   String messageRoot = "Hello from D1Wemos210!\n";
   messageRoot += "D1Wemos & Wifi will reset at midnight.\n";
@@ -101,7 +101,7 @@ void handleRoot() {
     }
 }
 
-//if by change any other unknown webpage used
+//if bychange any other unknown webpage used
 void handleNotFound(){
   String messageDead = "Nothing to see here.\n";
   messageDead += "Please check with 192.168.0.210/";
@@ -145,7 +145,7 @@ void setup(void){
 
 }
 
-//checks time for midnight and catches web refreshes-every 2 seconds
+//checks time for midnight and checks volt reading on A0 and catches web refreshes-cycles every 2 seconds
 void loop(void){
   timeClient.update();
   
