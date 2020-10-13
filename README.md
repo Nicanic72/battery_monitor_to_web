@@ -11,7 +11,7 @@ This project reads the voltage of a (car) battery or any other battery and posts
 6.Void setup - Allcocates fixed IP, Starts webserver, serial prints information.  
 7.Void loop - checks time, checks A0 pin volts, check for web requests  
   
-function resetting the wemos is wa ebpage /reset that will 'reboot' the wemos   
+function resetting the wemos is webpage /reset that will 'reboot' the wemos manually    
 function timecheck checks time and if midnight, 'reboots' the wemos   
 funtion handleroot prints text, time and volts to webpage   
 resistors used r1 was around 10m and r2 1m    
